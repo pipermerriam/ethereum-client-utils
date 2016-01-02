@@ -24,6 +24,9 @@ class ExampleClient(BaseClient):
         self._request_in_progress = False
         return {'result': hex(1)}
 
+    def do_something(self):
+        return self.make_request()
+
 
 def test_fails_when_synchronous():
     client = ExampleClient(async=False)
@@ -34,7 +37,7 @@ def test_fails_when_synchronous():
     def spam_block_number():
         for i in range(10):
             try:
-                client.get_block_number()
+                client.do_something()
             except AsyncError as e:
                 errors.append(e)
                 raise
@@ -58,7 +61,7 @@ def test_succeeds_when_asynchrounous():
     def spam_block_number():
         for i in range(10):
             try:
-                client.get_block_number()
+                client.do_something()
             except AsyncError as e:
                 errors.append(e)
                 raise
