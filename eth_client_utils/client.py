@@ -58,7 +58,6 @@ class BaseClient(object):
         raise NotImplementedError("Clients must implement this method")
 
 
-
 class JSONRPCBaseClient(BaseClient):
     _nonce = 0
 
