@@ -6,58 +6,15 @@ import threading
 import uuid
 
 from eth_client_utils.utils import (
+    get_transaction_params,
+    construct_filter_args,
     wait_for_transaction,
     wait_for_block,
     get_max_gas,
 )
 
 
-def get_transaction_params(_from=None, to=None, gas=None, gas_price=None,
-                           value=0, data=None):
-    params = {}
-
-    if _from is None:
-        raise ValueError("No default from address specified")
-
-    params['from'] = _from
-
-    if to is None and data is None:
-        raise ValueError("A `to` address is only optional for contract creation")
-    elif to is not None:
-        params['to'] = to
-
-    if gas is not None:
-        params['gas'] = hex(gas)
-
-    if gas_price is not None:
-        params['gasPrice'] = hex(gas_price)
-
-    if value is not None:
-        params['value'] = hex(value).rstrip('L')
-
-    if data is not None:
-        params['data'] = data
-
-    return params
-
-
-def construct_filter_args(from_block=None, to_block=None, address=None,
-                          topics=None):
-    params = {}
-    if from_block is not None:
-        params["fromBlock"] = from_block
-    if to_block is not None:
-        params["toBlock"] = to_block
-    if address is not None:
-        params["address"] = address
-    if topics is not None:
-        params["topics"] = topics
-    return(params)
-
-
 class BaseClient(object):
-    _nonce = 0
-
     def __init__(self, async=True, async_timeout=10):
         self.is_async = async
         self.async_timeout = async_timeout
@@ -69,29 +26,6 @@ class BaseClient(object):
             self.request_thread = threading.Thread(target=self.process_requests)
             self.request_thread.daemon = True
             self.request_thread.start()
-
-    def get_nonce(self):
-        self._nonce += 1
-        return self._nonce
-
-    _coinbase_cache = None
-    _coinbase_cache_til = None
-
-    @property
-    def default_from_address(self):
-        """
-        Cache the coinbase address so that we don't make two requests for every
-        single transaction.
-        """
-        if self._coinbase_cache_til is not None:
-            if time.time - self._coinbase_cache_til > 30:
-                self._coinbase_cache_til = None
-                self._coinbase_cache = None
-
-        if self._coinbase_cache is None:
-            self._coinbase_cache = self.get_coinbase()
-
-        return self._coinbase_cache
 
     def process_requests(self):
         """
@@ -122,6 +56,34 @@ class BaseClient(object):
 
     def _make_request(self, method, params):
         raise NotImplementedError("Clients must implement this method")
+
+
+
+class JSONRPCBaseClient(BaseClient):
+    _nonce = 0
+
+    def get_nonce(self):
+        self._nonce += 1
+        return self._nonce
+
+    _coinbase_cache = None
+    _coinbase_cache_til = None
+
+    @property
+    def default_from_address(self):
+        """
+        Cache the coinbase address so that we don't make two requests for every
+        single transaction.
+        """
+        if self._coinbase_cache_til is not None:
+            if time.time - self._coinbase_cache_til > 30:
+                self._coinbase_cache_til = None
+                self._coinbase_cache = None
+
+        if self._coinbase_cache is None:
+            self._coinbase_cache = self.get_coinbase()
+
+        return self._coinbase_cache
 
     def construct_json_request(self, method, params):
         request = json.dumps({

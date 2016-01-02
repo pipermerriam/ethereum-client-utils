@@ -30,3 +30,46 @@ def get_max_gas(blockchain_client):
     max_gas_hex = latest_block['gasLimit']
     max_gas = int(max_gas_hex, 16)
     return max_gas
+
+
+def get_transaction_params(_from=None, to=None, gas=None, gas_price=None,
+                           value=0, data=None):
+    params = {}
+
+    if _from is None:
+        raise ValueError("No default from address specified")
+
+    params['from'] = _from
+
+    if to is None and data is None:
+        raise ValueError("A `to` address is only optional for contract creation")
+    elif to is not None:
+        params['to'] = to
+
+    if gas is not None:
+        params['gas'] = hex(gas)
+
+    if gas_price is not None:
+        params['gasPrice'] = hex(gas_price)
+
+    if value is not None:
+        params['value'] = hex(value).rstrip('L')
+
+    if data is not None:
+        params['data'] = data
+
+    return params
+
+
+def construct_filter_args(from_block=None, to_block=None, address=None,
+                          topics=None):
+    params = {}
+    if from_block is not None:
+        params["fromBlock"] = from_block
+    if to_block is not None:
+        params["toBlock"] = to_block
+    if address is not None:
+        params["address"] = address
+    if topics is not None:
+        params["topics"] = topics
+    return(params)
