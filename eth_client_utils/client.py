@@ -1,8 +1,4 @@
-import os
 import time
-import sys
-import socket
-import errno
 import json
 import numbers
 import Queue

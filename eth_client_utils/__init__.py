@@ -1,1 +1,1 @@
-from .client import BaseClient
+from .client import BaseClient  # NOQA
