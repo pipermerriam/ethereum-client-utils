@@ -35,7 +35,7 @@ class BaseClient(object):
             id, args, kwargs = self.request_queue.get()
             try:
                 response = self._make_request(*args, **kwargs)
-            except ValueError as e:
+            except Exception as e:
                 response = e
             self.results[id] = response
 
