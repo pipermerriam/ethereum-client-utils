@@ -23,7 +23,7 @@ setup(
     author_email='pipermerriam@gmail.com',
     url='https://github.com/pipermerriam/ethereum-client-utils',
     include_package_data=True,
-    py_modules=['eth_client-utils'],
+    py_modules=['eth_client_utils'],
     license="MIT",
     zip_safe=False,
     keywords='ethereum',
