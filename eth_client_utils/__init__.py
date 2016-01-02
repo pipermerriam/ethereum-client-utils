@@ -1,1 +1,4 @@
-from .client import BaseClient  # NOQA
+from .client import (  # NOQA
+    BaseClient,
+    JSONRPCBaseClient,
+)
