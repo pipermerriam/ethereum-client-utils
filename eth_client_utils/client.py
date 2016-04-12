@@ -1,7 +1,10 @@
 import time
 import json
 import numbers
-import Queue
+try:
+    import Queue
+except:
+    from queue import Queue
 import threading
 import uuid
 
