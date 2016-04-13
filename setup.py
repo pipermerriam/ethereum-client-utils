@@ -9,14 +9,12 @@ try:
 except ImportError:
     from distutils.core import setup, find_packages
 
-version = '0.3.0'
-
 readme = open(os.path.join(DIR, 'README.md')).read()
 
 
 setup(
     name='ethereum-client-utils',
-    version=version,
+    version='0.3.1',
     description="""Ethereum Client Utils""",
     long_description=readme,
     author='Piper Merriam',
