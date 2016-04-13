@@ -1,7 +1,7 @@
 import time
 import json
 import numbers
-import Queue
+from six.moves.queue import Queue
 import threading
 import uuid
 
@@ -20,7 +20,7 @@ class BaseClient(object):
         self.async_timeout = async_timeout
 
         if self.is_async:
-            self.request_queue = Queue.Queue()
+            self.request_queue = Queue()
             self.results = {}
 
             self.request_thread = threading.Thread(target=self.process_requests)
