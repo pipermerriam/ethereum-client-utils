@@ -14,7 +14,7 @@ readme = open(os.path.join(DIR, 'README.md')).read()
 
 setup(
     name='ethereum-client-utils',
-    version='0.3.1',
+    version='0.3.2',
     description="""Ethereum Client Utils""",
     long_description=readme,
     author='Piper Merriam',
